@@ -24,8 +24,8 @@ jobs:
 
       - name: Sync docs to wiki
         run: |
-          rsync -av --progress --delete docs/ wiki/
           cd wiki
+          rsync -av --progress --delete ../docs/ .
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           if [ -n "$(git status --porcelain)" ]; then
