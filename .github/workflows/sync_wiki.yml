@@ -30,7 +30,7 @@ jobs:
           if [ -n "$(git status)" ]; then
             git add .
             git commit -m "Sync Wiki with new changes"
-            git push origin-wiki master
+            git push origin HEAD
           else
             echo "No changes to commit"
           fi
