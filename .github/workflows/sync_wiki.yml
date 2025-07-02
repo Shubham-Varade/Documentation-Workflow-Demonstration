@@ -1,0 +1,30 @@
+name: Sync Docs to Wiki
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'docs/**/*.md'
+
+jobs:
+  sync-to-wiki:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Clone Wiki repository
+        run: |
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git wiki
+
+      - name: Copy docs to wiki
+        run: |
+          rsync -av --delete docs/ wiki/
+          cd wiki
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git add .
+          git commit -m "Update Wiki from /docs" || echo "No changes to commit"
+          git push
