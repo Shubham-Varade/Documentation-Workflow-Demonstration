@@ -1,4 +1,4 @@
-# This is the first new page of the wiki - v0.19
+# This is the first new page of the wiki - v0.20
 
 Some description
 
