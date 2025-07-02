@@ -1,4 +1,6 @@
 name: Sync Docs to Wiki
+env:
+  
 
 on:
   push:
@@ -21,10 +23,13 @@ jobs:
 
       - name: Copy docs to wiki
         run: |
-          rsync -av --delete docs/ wiki/
-          cd wiki
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor }}@users.noreply.github.com"
-          git add .
-          git commit -m "Update Wiki from /docs" || echo "No changes to commit"
-          git push
+          if git diff-index --quiet HEAD && [ ! -n "$(git status -s)" ]; then 
+            set +e 
+            pkill -9 -P $$ &> /dev/null || true 
+            exit 0
+          else 
+            git config user.name "${{ github.actor }}"
+            git config user.email "${{ github.actor }}@users.noreply.github.com"
+            git add .
+            git commit -m "Update Wiki from /docs"
+            git push origin-wiki master
