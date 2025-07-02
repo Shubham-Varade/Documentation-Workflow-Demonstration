@@ -19,16 +19,16 @@ jobs:
         run: |
           git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git wiki
 
-      - name: Copy docs to wiki
+      - name: Sync docs to wiki
         run: |
-          if git diff-index --quiet HEAD && [ ! -n "$(git status -s)" ]; then 
-            set +e 
-            pkill -9 -P $$ &> /dev/null || true 
-            exit 0
-          else 
-            git config user.name "${{ github.actor }}"
-            git config user.email "${{ github.actor }}@users.noreply.github.com"
+          rsync -av --progress --delete docs/ wiki/
+          cd wiki
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          if [ -n "$(git status --porcelain)" ]; then
             git add .
-            git commit -m "Update Wiki from /docs"
-            git push origin-wiki master
+            git commit -m "Sync Wiki with new changes"
+            git push
+          else
+            echo "No changes to commit"
           fi
