@@ -1,11 +1,12 @@
 name: Sync Docs to Wiki
 
 on:
-  push:
-    branches:
-      - develop
-    paths:
-      - 'docs/**/*.md'
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - develop
+  #   paths:
+  #     - 'docs/**/*.md'
 
 jobs:
   sync-to-wiki:
